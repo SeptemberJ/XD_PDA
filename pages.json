@@ -1,0 +1,85 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "循道PDA"
+			}
+		},
+		{
+			"path": "pages/orderRK/index",
+			"style": {
+				"navigationBarTitleText": "待处理入库单",
+				// "enablePullDownRefresh": true,
+				// "backgroundTextStyle": "dark",
+				"app-plus": {
+					"pullToRefresh": {
+						"support": true,
+						"color": "#6190E8",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/orderRK/scan",
+			"style": {
+				"navigationBarTitleText": "入库单扫描"
+			}
+		},
+		{
+			"path": "pages/orderDB/index",
+			"style": {
+				"navigationBarTitleText": "待处理调拨单",
+				// "enablePullDownRefresh": true,
+				// "backgroundTextStyle": "dark",
+				"app-plus": {
+					"pullToRefresh": {
+						"support": true,
+						"color": "#6190E8",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/orderDB/scan",
+			"style": {
+				"navigationBarTitleText": "调拨单扫描"
+			}
+		},
+		{
+			"path": "pages/orderXS/index",
+			"style": {
+				"navigationBarTitleText": "待处理销售出库单",
+				// "enablePullDownRefresh": true,
+				// "backgroundTextStyle": "dark",
+				"app-plus": {
+					"pullToRefresh": {
+						"support": true,
+						"color": "#6190E8",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/orderXS/scan",
+			"style": {
+				"navigationBarTitleText": "出库单扫描"
+			}
+		},
+		{
+			"path": "pages/orderXS/package",
+			"style": {
+				"navigationBarTitleText": "出库单打包"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#6190e8",
+		"backgroundColor": "#FFFFFF"
+	}
+}
