@@ -15,11 +15,11 @@
 				<view>{{ order.fdate}}</view>
 			</view>
 			<view class="itemBar">
-				<view>调入仓库：</view>
+				<view>调出仓库：</view>
 				<view>{{ order.fscstock}}</view>
 			</view>
 			<view class="itemBar">
-				<view>调出仓库：</view>
+				<view>调入仓库：</view>
 				<view>{{ order.fdcstcok}}</view>
 			</view>
 			<view class="itemBar">

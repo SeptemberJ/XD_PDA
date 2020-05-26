@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="itemBar">
-			<view>FCN码：</view>
+			<view>快递单号：</view>
 			<view>
 				<text style="margin-right: 10px;">{{ FCN }}</text>
 				<button type="primary" @click="scan" style="width:100px;height: 40px;line-height: 40px; float: right;background: #fff; border: 1px solid #007aff;color: #007aff;margin-top: 5px;">扫码</button>
@@ -29,7 +29,7 @@
 				FSNList: [],
 				companyIDList: [],
 				companyList: [],
-				FCN: '123',
+				FCN: '',
 				FCompany: '',
 				index: 0,
 				loadingPackage: false
@@ -61,7 +61,7 @@
 			package () {
 				if (!this.FCN || !this.FCompany) {
 					uni.showModal({
-						content: 'FCN码和公司为必填项',
+						content: '快递单号和公司为必填项',
 						showCancel: false
 					});
 					return false
