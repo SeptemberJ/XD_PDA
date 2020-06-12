@@ -49,7 +49,9 @@
 
 <script>
 	import { combineRequsetData } from '../../utils/util.js'
-	import uniLoading from '@/components/loading/loading.vue';
+	import uniLoading from '@/components/loading/loading.vue'
+	import { mainUrl } from '../../utils/url.js'
+
 	export default {
 		components: {
 			uniLoading
@@ -77,7 +79,7 @@
 			getList () {
 				var tmpData = '<FSQL>select * from z_icstockbill_41</FSQL>'
 				uni.request({
-					url: 'http://111.231.134.126:8092/Service1.asmx',
+					url: mainUrl,
 					method: 'POST',
 					data: combineRequsetData('JA_LIST', tmpData),
 					header:{

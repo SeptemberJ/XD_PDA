@@ -23,6 +23,7 @@
 
 <script>
 	import { combineRequsetData } from '../../utils/util.js'
+	import { mainUrl } from '../../utils/url.js'
 	export default {
 		data() {
 			return {
@@ -72,7 +73,7 @@
 					tmpData += '<FCompany>' + this.FCompany + '</FCompany>'
 					tmpData += '<FCN>' + this.FCN + '</FCN>'
 				uni.request({
-					url: 'http://111.231.134.126:8092/Service1.asmx',
+					url: mainUrl,
 					method: 'POST',
 					data: combineRequsetData('pack_21', tmpData),
 					header:{
@@ -113,7 +114,7 @@
 			getCompany () {
 				var tmpData = '<FSQL>select FName,FItemID from t_Item where FItemClassID=3005</FSQL>'
 				uni.request({
-					url: 'http://111.231.134.126:8092/Service1.asmx',
+					url: mainUrl,
 					method: 'POST',
 					data: combineRequsetData('JA_LIST', tmpData),
 					header:{

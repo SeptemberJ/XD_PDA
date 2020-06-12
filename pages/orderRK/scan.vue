@@ -58,6 +58,7 @@
 
 <script>
 	import { combineRequsetData } from '../../utils/util.js'
+	import { mainUrl } from '../../utils/url.js'
 	export default {
 		data() {
 			return {
@@ -120,7 +121,7 @@
 					tmpData += '<FEntryID>' + this.FEntryID + '</FEntryID>'
 					tmpData += '<FSN>' +  code + '</FSN>'
 				uni.request({
-					url: 'http://111.231.134.126:8092/Service1.asmx',
+					url: mainUrl,
 					method: 'POST',
 					data: combineRequsetData('Save_2', tmpData),
 					header:{
@@ -159,7 +160,7 @@
 					tmpData += '<FEntryID>' + this.FEntryID + '</FEntryID>'
 					tmpData += '<FSN>' +  code + '</FSN>'
 				uni.request({
-					url: 'http://111.231.134.126:8092/Service1.asmx',
+					url: mainUrl,
 					method: 'POST',
 					data: combineRequsetData('Delete_2', tmpData),
 					header:{
@@ -199,7 +200,7 @@
 					var tmpData = '<FInterID>' + this.FInterID + '</FInterID>'
 						tmpData += '<FEntryID>' + this.FEntryID + '</FEntryID>'
 					uni.request({
-						url: 'http://111.231.134.126:8092/Service1.asmx',
+						url: mainUrl,
 						method: 'POST',
 						data: combineRequsetData('Check_2', tmpData),
 						header:{
@@ -247,7 +248,7 @@
 			getDetail () {
 				var tmpData = '<FSQL>select FNumber from Z_ICSerial_LOG where FInterID=' + this.FInterID + ' and FEntryID=' + this.FEntryID + '</FSQL>'
 				uni.request({
-					url: 'http://111.231.134.126:8092/Service1.asmx',
+					url: mainUrl,
 					method: 'POST',
 					data: combineRequsetData('JA_LIST', tmpData),
 					header:{
