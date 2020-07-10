@@ -83,18 +83,11 @@
 					success: (res) => {
 						this.DBList = res.data
 					},
-					fail: (err) => {
-						console.log('request fail', err);
-						// uni.showModal({
-						// 	content: err.errMsg,
-						// 	showCancel: false
-						// });
-					},
 					complete: () => {
 						this.loading = false;
-						uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh()
 					}
-				});
+				})
 			}
 		}
 	}
@@ -102,7 +95,6 @@
 
 <style>
 	.container {
-		/* padding: 0 0 20px 0; */
 		min-height: 100vh;
 		font-size: 14px;
 		line-height: 24px;

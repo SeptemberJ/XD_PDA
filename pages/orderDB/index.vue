@@ -88,13 +88,6 @@
 					success: (res) => {
 						this.DBList = res.data
 					},
-					fail: (err) => {
-						console.log('request fail', err);
-						// uni.showModal({
-						// 	content: err.errMsg,
-						// 	showCancel: false
-						// });
-					},
 					complete: () => {
 						this.loading = false;
 						uni.stopPullDownRefresh();

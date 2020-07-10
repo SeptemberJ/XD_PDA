@@ -14,10 +14,6 @@
 				<view>入库日期：</view>
 				<view>{{ order.fdate}}</view>
 			</view>
-			<!-- <view class="itemBar">
-				<view>调入仓库：</view>
-				<view>{{ order.fscstock}}</view>
-			</view> -->
 			<view class="itemBar">
 				<view>收货仓库：</view>
 				<view>{{ order.fdcstcok}}</view>
@@ -87,18 +83,11 @@
 					success: (res) => {
 						this.DBList = res.data
 					},
-					fail: (err) => {
-						console.log('request fail', err);
-						// uni.showModal({
-						// 	content: err.errMsg,
-						// 	showCancel: false
-						// });
-					},
 					complete: () => {
 						this.loading = false;
-						uni.stopPullDownRefresh();
+						uni.stopPullDownRefresh()
 					}
-				});
+				})
 			}
 		}
 	}
@@ -106,7 +95,6 @@
 
 <style>
 	.container {
-		/* padding: 0 0 20px 0; */
 		min-height: 100vh;
 		font-size: 14px;
 		line-height: 24px;

@@ -37,13 +37,9 @@
 				<view>调拨数量：</view>
 				<view>{{ FAuxQty}}</view>
 			</view>
-			<!-- <view class="itemBar">
-				<view>SN&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;码：</view>
-				<view>{{ SNCode}}</view>
-			</view> -->
 		</view>
 		<view style="clear: both;"></view>
-		<button type="primary" @click="scan" style="width:200px; margin:30px auto;">扫码</button>
+<!-- 		<button type="primary" @click="scan" style="width:200px; margin:30px auto;">扫码</button>-->		
 		<view style="margin: 0 auto 5px 10px;">SN码扫描结果</view>
 		<view class="scanResultList">
 			<view v-for="(code, idx) in scanResultList" class="codeBar">
@@ -57,12 +53,14 @@
 			<button type="secondary" @click="package" :loading="loadingPackage" style="border: 2px solid darkorange;color: darkorange;background: #fff;">打包</button>
 			<button type="warn" @click="submit" :loading="loading" style="border: 2px solid darkorange;background: darkorange;color: #fff;">提交</button>
 		</view>
+		<scan-code></scan-code>
 	</view>
 </template>
 
 <script>
 	import { combineRequsetData } from '../../utils/util.js'
 	import { mainUrl } from '../../utils/url.js'
+	import scanCode from "@/components/scan-code/scan-code.vue"
 
 	export default {
 		data() {
@@ -82,9 +80,11 @@
 				FAuxQty: '',
 				SNCode: '',
 				scanResultList: [],
-				scanResultList2: ['01.05.11002/00000002', '01.05.11002/00000003', '01.05.11002/00000003', '01.05.11002/00000003', '01.05.11002/00000003', '01.05.11002/00000003', '01.05.11002/00000003'],
 				DBList: []
 			}
+		},
+		components: {
+			scanCode
 		},
 		onLoad: function (options) {
 			this.FInterID = options.FInterID
@@ -99,16 +99,33 @@
 			this.funit = options.funit
 			this.FAuxQty = options.FAuxQty
 		},
+		onShow () {
+			var _this = this
+			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
+			uni.$on('scancodedate',(data) => {  
+				_this.result = data.code
+				_this.broadcastBackInfo(data.code)
+			})
+		},
 		created () {
 			this.getDetail()
 		},
 		methods: {
+			broadcastBackInfo (result) {
+				if (this.FAuxQty > this.scanResultList.length ) {
+					this.saveCode(result)
+				} else {
+					uni.showModal({
+						content: 'SN码行数已达到调拨数量',
+						showCancel: false
+					})
+				}
+			},
 			scan () {
 				if (this.FAuxQty > this.scanResultList.length ) {
 					uni.scanCode({
 					    onlyFromCamera: true,
 					    success: (res) => {
-					        // console.log('条码类型：' + res.scanType + '条码内容：' + res.result)
 							this.saveCode(res.result)
 					    },
 						fail: (err) => {
@@ -119,7 +136,7 @@
 					uni.showModal({
 						content: 'SN码行数已达到调拨数量',
 						showCancel: false
-					});
+					})
 				}
 			},
 			saveCode (code) {
@@ -157,7 +174,7 @@
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
 				});
 			},
@@ -192,11 +209,10 @@
 						}s						
 					},
 					fail: (err) => {
-						console.log('request fail', err);
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
 				});
 			},
@@ -221,15 +237,13 @@
 										mask: true,
 										duration: 1500
 									})
-									uni.navigateTo({
-									    url: './index'
-									});
+									uni.navigateBack()
 								break
 								default:
 									uni.showModal({
 										content: '提交失败',
 										showCancel: false
-									});
+									})
 								break
 							}
 							
@@ -238,7 +252,7 @@
 							uni.showModal({
 								content: err.errMsg,
 								showCancel: false
-							});
+							})
 						},
 						complete: () => {
 							this.loading = false
@@ -248,7 +262,7 @@
 					uni.showModal({
 						content: 'SN码行数与调拨数量不一致，请先扫码',
 						showCancel: false
-					});
+					})
 				}
 			},
 			package () {
@@ -289,7 +303,7 @@
 									uni.showModal({
 										content: '打包失败',
 										showCancel: false
-									});
+									})
 								break
 							}
 							
@@ -298,7 +312,7 @@
 							uni.showModal({
 								content: err.errMsg,
 								showCancel: false
-							});
+							})
 						},
 						complete: () => {
 							this.loading = false
@@ -331,7 +345,7 @@
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
 				});
 			},
@@ -356,13 +370,12 @@
 							resolve(res.data)
 						},
 						fail: (err) => {
-							console.log('request fail', err);
 							uni.showModal({
 								content: err.errMsg,
 								showCancel: false
-							});
+							})
 						}
-					});
+					})
 				})
 			}
 		}
@@ -427,7 +440,4 @@
 	.codeBar button{
 		float: right;
 	}
-/* 	.codeBar text:nth-of-type(2){
-		float: right;
-	} */
 </style>

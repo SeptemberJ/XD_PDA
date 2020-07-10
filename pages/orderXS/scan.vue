@@ -35,7 +35,7 @@
 			</view>
 		</view>
 		<view style="clear: both;"></view>
-		<button type="primary" @click="scan" style="width:200px; margin:30px auto;">扫码</button>
+		<!-- <button type="primary" @click="scan" style="width:200px; margin:30px auto;">扫码</button> -->
 		<view style="margin: 0 auto 5px 10px;">SN码扫描结果</view>
 		<view class="scanResultList">
 			<view v-for="(code, idx) in scanResultList" class="codeBar">
@@ -51,12 +51,15 @@
 			<button type="secondary" @click="toPackage" style="border: 2px solid darkorange;color: darkorange;background: #fff;">打包</button>
 			<button type="warn" @click="submit" :loading="loading" style="border: 2px solid darkorange;background: darkorange;color: #fff;">提交</button>
 		</view>
+		<scan-code></scan-code>
 	</view>
 </template>
 
 <script>
 	import { combineRequsetData } from '../../utils/util.js'
 	import { mainUrl } from '../../utils/url.js'
+	import scanCode from "@/components/scan-code/scan-code.vue"
+
 	export default {
 		data() {
 			return {
@@ -78,6 +81,9 @@
 				DBList: []
 			}
 		},
+		components: {
+			scanCode
+		},
 		onLoad: function (options) {
 			this.FInterID = options.FInterID
 			this.FEntryID = options.FEntryID
@@ -93,8 +99,24 @@
 		},
 		onShow () {
 			this.getDetail()
+			var _this = this
+			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
+			uni.$on('scancodedate',(data) => {  
+				_this.result = data.code
+				_this.broadcastBackInfo(data.code)
+			})
 		},
 		methods: {
+			broadcastBackInfo (result) {
+				if (this.FAuxQty > this.scanResultList.length ) {
+					this.saveCode(result)
+				} else {
+					uni.showModal({
+						content: 'SN码行数已达到调拨数量',
+						showCancel: false
+					})
+				}
+			},
 			seeDetail (idx) {
 				let info = this.scanResultList[idx]
 				uni.showModal({
@@ -102,14 +124,13 @@
 					content: 'SN码：' + info.FNumber + '\r\n' + 'FCN码：' + info.FCN + '\r\n' + '公司名称：' + info.FCompany + '\r\n' + '打包单号：' + info.FType,
 					showCancel: false,
 					confirmText: '关闭',
-				});
+				})
 			},
 			scan () {
 				if (this.FAuxQty > this.scanResultList.length ) {
 					uni.scanCode({
 					    onlyFromCamera: true,
 					    success: (res) => {
-					        // console.log('条码类型：' + res.scanType + '条码内容：' + res.result)
 							this.saveCode(res.result)
 					    },
 						fail: (err) => {
@@ -120,7 +141,7 @@
 					uni.showModal({
 						content: 'SN码行数已达到调拨数量',
 						showCancel: false
-					});
+					})
 				}
 			},
 			saveCode (code) {
@@ -149,7 +170,7 @@
 								uni.showModal({
 									content: '库存中不存在该SN码',
 									showCancel: false
-								});
+								})
 							break
 						}
 						
@@ -158,9 +179,9 @@
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
-				});
+				})
 			},
 			delCode (code, idx) {
 				var tmpData = '<FInterID>' + this.FInterID + '</FInterID>'
@@ -193,11 +214,10 @@
 						}s						
 					},
 					fail: (err) => {
-						console.log('request fail', err);
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
 				});
 			},
@@ -222,9 +242,7 @@
 										mask: true,
 										duration: 1500
 									})
-									uni.navigateTo({
-									    url: './index'
-									});
+									uni.navigateBack()
 								break
 								default:
 									uni.showModal({
@@ -239,17 +257,17 @@
 							uni.showModal({
 								content: err.errMsg,
 								showCancel: false
-							});
+							})
 						},
 						complete: () => {
 							this.loading = false
 						}
-					});
+					})
 				} else {
 					uni.showModal({
 						content: 'SN码行数与调拨数量不一致，请先扫码',
 						showCancel: false
-					});
+					})
 				}
 			},
 			toPackage (order) {
@@ -262,12 +280,12 @@
 				if (tmp.length > 0) {
 					uni.navigateTo({
 					    url: './package?FSN=' + JSON.stringify(tmp)
-					});
+					})
 				} else {
 					uni.showModal({
 						content: '当前没有需要打包的SN码',
 						showCancel: false
-					});
+					})
 				}
 			},
 			async getDetail () {
@@ -293,13 +311,12 @@
 						}
 					},
 					fail: (err) => {
-						console.log('request fail', err);
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
-				});
+				})
 			},
 			checkIfpackaged (packaged, curItem) {
 				for (let i = 0; i < packaged.length; i++) {
@@ -322,13 +339,12 @@
 							resolve(res.data)
 						},
 						fail: (err) => {
-							console.log('request fail', err);
 							uni.showModal({
 								content: err.errMsg,
 								showCancel: false
-							});
+							})
 						}
-					});
+					})
 				})
 			}
 		}
@@ -393,8 +409,4 @@
 	.codeBar button{
 		float: right;
 	}
-
-/* 	.codeBar text:nth-of-type(2){
-		float: right;
-	} */
 </style>

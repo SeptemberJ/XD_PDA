@@ -4,7 +4,7 @@
 			<view>快递单号：</view>
 			<view>
 				<text style="margin-right: 10px;">{{ FCN }}</text>
-				<button type="primary" @click="scan" style="width:100px;height: 40px;line-height: 40px; float: right;background: #fff; border: 1px solid #007aff;color: #007aff;margin-top: 5px;">扫码</button>
+				<!-- <button type="primary" @click="scan" style="width:100px;height: 40px;line-height: 40px; float: right;background: #fff; border: 1px solid #007aff;color: #007aff;margin-top: 5px;">扫码</button> -->
 				</view>
 		</view>
 		<view class="itemBar">
@@ -18,12 +18,15 @@
 		<view class="itemBar" style="margin-top: 30px;">
 			<button type="secondary" @click="package" :loading="loadingPackage" style="width: 200px;border: 2px solid darkorange;color: #fff;background: darkorange;">提交</button>
 		</view>
+		<scan-code></scan-code>
 	</view>
 </template>
 
 <script>
 	import { combineRequsetData } from '../../utils/util.js'
 	import { mainUrl } from '../../utils/url.js'
+	import scanCode from "@/components/scan-code/scan-code.vue"
+
 	export default {
 		data() {
 			return {
@@ -36,14 +39,28 @@
 				loadingPackage: false
 			}
 		},
+		components: {
+			scanCode
+		},
 		onLoad: function (options) {
 			this.FSNList = JSON.parse(options.FSN)
 			console.log(JSON.parse(options.FSN))
 		},
 		onShow () {
+			var _this = this
+			uni.$off('scancodedate') // 每次进来先 移除全局自定义事件监听器  
+			uni.$on('scancodedate',(data) => {  
+				_this.result = data.code
+				_this.broadcastBackInfo(data.code)
+			})
+		},
+		onShow () {
 			this.getCompany()
 		},
 		methods: {
+			broadcastBackInfo (result) {
+				this.FCN = result
+			},
 			scan () {
 				uni.scanCode({
 				    onlyFromCamera: true,
@@ -89,13 +106,13 @@
 									duration: 1500
 								})
 								this.loadingPackage = false
-								uni.navigateBack();
+								uni.navigateBack()
 							break
 							default:
 								uni.showModal({
 									content: '打包失败',
 									showCancel: false
-								});
+								})
 							break
 						}
 						
@@ -104,12 +121,12 @@
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					},
 					complete: () => {
 						this.loading = false
 					}
-				});
+				})
 			},
 			getCompany () {
 				var tmpData = '<FSQL>select FName,FItemID from t_Item where FItemClassID=3005</FSQL>'
@@ -130,11 +147,10 @@
 						this.FCompany = res.data[0].FItemID
 					},
 					fail: (err) => {
-						console.log('request fail', err);
 						uni.showModal({
 							content: err.errMsg,
 							showCancel: false
-						});
+						})
 					}
 				})
 			}
